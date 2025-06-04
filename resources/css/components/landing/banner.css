@@ -1,0 +1,10 @@
+.banner-media {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+}
+
+.preview-video {
+    object-fit: cover;
+    cursor: pointer;
+}

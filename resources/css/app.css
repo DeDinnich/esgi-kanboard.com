@@ -1,0 +1,19 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "../../public/fonts/css/all.min.css";
+@import "mapbox-gl/dist/mapbox-gl.css";
+
+/* Layouts */
+
+/* Pages */
+
+/* Partials - Landing */
+@import "partials/landing/header.css";
+@import "partials/landing/footer.css";
+
+/* Partials - Dashboard */
+/* @import "partials/dashboard/header.css"; */
+@import "partials/dashboard/sidebarAndHeader.css";
+
+/* Components */
+@import "components/landing/banner.css";
+@import "components/landing/prices.css";

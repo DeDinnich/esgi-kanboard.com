@@ -1,0 +1,35 @@
+section h1 {
+    font-weight: bold;
+    font-size: 2rem;
+    margin-bottom: 3rem;
+}
+
+.card .card-header {
+    background-color: #f8f9fa;
+    font-size: 1.25rem;
+}
+
+.card h2 {
+    color: #007bff;
+}
+
+.card ul li {
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.card ul li i {
+    width: 20px;
+}
+
+.modal .form-control {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+}
+
+#card-element {
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+}

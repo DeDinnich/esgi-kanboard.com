@@ -1,0 +1,92 @@
+#dashboard-aside {
+    transition: width 0.3s ease;
+}
+
+#dashboard-aside.collapsed {
+    width: 80px !important;
+}
+
+#dashboard-aside.collapsed #aside-title {
+    font-size: 1.2rem;
+    text-align: center;
+    width: 100%;
+}
+
+/* On masque tout sauf ce qu'on veut afficher */
+#dashboard-aside.collapsed .btn:not(.btn-primary):not(#expand-sidebar),
+#dashboard-aside.collapsed ul,
+#dashboard-aside.collapsed h6,
+#dashboard-aside.collapsed hr:not(:first-of-type),
+#dashboard-aside.collapsed #aside-footer,
+#dashboard-aside.collapsed [data-bs-toggle="collapse"] {
+    display: none !important;
+}
+
+/* On garde le bouton + et le premier <hr> */
+#dashboard-aside.collapsed .btn.btn-primary,
+#dashboard-aside.collapsed hr:first-of-type {
+    display: block !important;
+}
+
+/* Afficher le bouton pour étendre en bas */
+#dashboard-aside.collapsed #aside-expand {
+    display: block !important;
+    text-align: center;
+}
+
+/* Masquer par défaut */
+#dashboard-aside #aside-expand {
+    display: none;
+}
+
+#dashboard-aside.collapsed #new-project-button .button-text {
+    display: none !important;
+}
+
+#dashboard-aside #new-project-button .button-icon {
+    margin-right: 0;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+}
+
+/* Uniformise la hauteur du header et du bloc supérieur du aside */
+.dashboard-header,
+#dashboard-aside .aside-top {
+    height: 72px; /* même hauteur */
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+}
+
+/* Override le padding de bootstrap sur .p-3 si besoin */
+#dashboard-aside .aside-top {
+    padding: 0 1rem !important;
+}
+
+/* Corrige l'ouverture du 2e sous-menu "Langue" */
+.dropdown-menu .dropstart:hover > .dropdown-menu {
+    display: block;
+    top: 0;
+    right: 100%;
+    left: auto;
+    margin-top: -0.5rem;
+}
+
+/* Empêche que le menu se ferme quand on passe au sous-menu */
+.dropdown-menu .dropstart {
+    position: relative;
+}
+
+.dropdown-menu .dropstart > .dropdown-menu {
+    position: absolute;
+    top: 0;
+    left: auto !important;
+    right: 100% !important;
+    display: none;
+    margin-top: -0.5rem;
+}
+
+.custom-dropdown-menu{
+    left: -200px !important; /* Ajuste la largeur du menu déroulant */
+}

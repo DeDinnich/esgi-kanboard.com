@@ -1,0 +1,45 @@
+/* Police par défaut */
+body, .font-cormorant {
+    font-family: 'Cormorant Garamond', serif;
+}
+
+/* Header */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: #fff;
+}
+
+header .nav-link {
+    font-weight: 600;
+    color: #333;
+    position: relative;
+}
+
+header .nav-link:hover,
+header .dropdown-menu .dropdown-item:hover {
+    color: #007bff;
+}
+
+header .dropdown-menu {
+    top: 100%;
+    left: 0;
+    display: none;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    padding: 0.5rem 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    min-width: 200px;
+}
+
+header .nav-item:hover .dropdown-menu {
+    display: block;
+}
+
+header .dropdown-item {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    color: #333;
+    white-space: nowrap;
+}
