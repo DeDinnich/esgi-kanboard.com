@@ -43,7 +43,6 @@
                     </ul>
                 </li>
 
-                <li><a class="dropdown-item" href="#">Facturation</a></li>
                 <li><a class="dropdown-item" href="#">Besoin d’aide</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <form method="POST" action="{{ route('logout') }}">

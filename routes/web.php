@@ -7,6 +7,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\DashController;
 
 Route::view('/', 'pages.landing.index')->name('home');
 Route::view('/about', 'pages.landing.about')->name('about');
@@ -18,10 +19,10 @@ Route::post('/stripe/pay', [PaymentController::class, 'pay'])->name('stripe.pay'
 Route::post('/stripe/confirm', [PaymentController::class, 'confirm'])->name('stripe.confirm');
 
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
+Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', function () {
     Auth::logout();
     request()->session()->invalidate();
@@ -39,6 +40,6 @@ Route::post('/password/reset', [AuthController::class, 'resetPassword'])->name('
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', fn () => view('pages.dashboard.home'))->name('dashboard');
-    Route::get('/profile', fn () => view('pages.dashboard.profile'))->name('profile');
+    Route::get('/profile', [DashController::class, 'profile'])->name('profile');
     Route::put('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update');
 });

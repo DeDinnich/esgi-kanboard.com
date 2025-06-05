@@ -5,7 +5,7 @@
 @section('content')
 <div class="container my-5" style="max-width: 500px;">
     <h1 class="mb-4">Connexion</h1>
-    <form method="POST" action="{{ route('login') }}">
+    <form class="mb-3" method="POST" action="{{ route('login') }}">
         @csrf
         <div class="mb-3">
             <input type="email" name="email" class="form-control" placeholder="Email" required>
@@ -19,6 +19,7 @@
         </div>
         <button type="submit" class="btn btn-primary w-100">Se connecter</button>
     </form>
+    @include('components.alerts')
 </div>
 @endsection
 

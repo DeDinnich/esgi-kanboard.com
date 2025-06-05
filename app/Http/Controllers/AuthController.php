@@ -28,31 +28,36 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $validated = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name'  => 'required|string|max:255',
-            'email'      => 'required|email|unique:users,email',
-            'password'   => 'required|confirmed|min:8',
-        ]);
+        try {
+            $validated = $request->validate([
+                'prenom'    => 'required|string|max:255',
+                'nom'       => 'required|string|max:255',
+                'email'     => 'required|email|unique:users,email',
+                'password'  => 'required|confirmed|min:8',
+            ]);
 
-        $user = User::create([
-            'first_name' => $validated['first_name'],
-            'last_name'  => $validated['last_name'],
-            'email'      => $validated['email'],
-            'password'   => Hash::make($validated['password']),
-        ]);
+            $user = User::create([
+                'first_name'     => $validated['prenom'],
+                'last_name'      => $validated['nom'],
+                'email'          => $validated['email'],
+                'password'       => Hash::make($validated['password']),
+                'subscription_id' => '155c8328-70dc-4bfd-bd90-0ac8b511990b', // Assigning the free plan
+            ]);
 
-        // Envoi du lien de vérification
-        $url = URL::temporarySignedRoute(
-            'verify-purchase-email',
-            now()->addMinutes(60),
-            ['user' => $user->id]
-        );
+            // Sending the verification link
+            $url = URL::temporarySignedRoute(
+                'verify-purchase-email',
+                now()->addMinutes(60),
+                ['user' => $user->id]
+            );
 
-        Mail::to($user->email)->send(new VerifyEmailLink($user, $url));
-        event(new Registered($user));
+            Mail::to($user->email)->send(new VerifyEmailLink($user, $url));
 
-        return redirect()->route('login')->with('success', 'Inscription réussie ! Vérifiez votre boîte mail pour activer votre compte.');
+            return redirect()->route('login')->with('success', 'Registration successful! Check your email inbox to activate your account.');
+        } catch (\Exception $e) {
+            Log::error('Registration error: ' . $e->getMessage(), ['exception' => $e]);
+            return back()->with('error', 'Une erreur est survenue lors de l\'inscription, veuillez contacter notre service technique depuis la page d\'accueil.');
+        }
     }
 
     public function login(Request $request)
@@ -144,7 +149,7 @@ class AuthController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:100',
             'last_name'  => 'required|string|max:100',
-            'email'      => 'required|email|unique:users,email,' . auth()->user()->id,
+            'email'      => 'required|email|unique:users,email,' . Auth::id(),
         ]);
 
         $user = Auth::user();
