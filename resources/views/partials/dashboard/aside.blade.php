@@ -14,12 +14,15 @@
 
         <h6 class="text-muted text-uppercase small mb-2">Mes projets</h6>
         <ul class="list-unstyled small mb-3" id="project-list">
-            <li><a href="#" class="d-block py-1">Projet 1</a></li>
-            <li><a href="#" class="d-block py-1">Projet 2</a></li>
-            <li><a href="#" class="d-block py-1">Projet 3</a></li>
-            <li><a href="#" class="d-block py-1">Projet 4</a></li>
-            <li><a href="#" class="d-block py-1">Projet 5</a></li>
-            <li><a href="#" class="text-primary small"><i class="fas fa-chevron-down me-1"></i>Voir plus</a></li>
+            @forelse ($projects as $project)
+                <li>
+                    <a href="#{{-- route('projects.show', $project) --}}" class="d-block py-1">
+                        {{ $project->nom }}
+                    </a>
+                </li>
+            @empty
+                <li class="text-muted">Aucun projet actif</li>
+            @endforelse
         </ul>
 
         <hr>
@@ -29,8 +32,15 @@
                 <i class="fas fa-box-archive me-1"></i> Mes projets archivés
             </a>
             <ul class="collapse list-unstyled small ps-3" id="archivedCollapse">
-                <li><a href="#" class="d-block py-1">Projet Archivé A</a></li>
-                <li><a href="#" class="d-block py-1">Projet Archivé B</a></li>
+                @forelse ($archivedProjects as $project)
+                    <li>
+                        <a href="#{{-- route('projects.show', $project) --}}" class="d-block py-1">
+                            {{ $project->nom }}
+                        </a>
+                    </li>
+                @empty
+                    <li class="text-muted">Aucun projet archivé</li>
+                @endforelse
             </ul>
         </div>
     </div>

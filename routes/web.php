@@ -35,7 +35,7 @@ Route::get('/password/reset/{token}', [AuthController::class, 'showResetForm'])-
 Route::post('/password/reset', [AuthController::class, 'resetPassword'])->name('password.update');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', fn () => view('pages.dashboard.home'))->name('dashboard');
+    Route::get('/dashboard', [DashController::class, 'index'])->name('dashboard');
     Route::get('/profile', [DashController::class, 'profile'])->name('profile');
     Route::put('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update');
 });

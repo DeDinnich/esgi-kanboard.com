@@ -17,7 +17,24 @@ class DashController extends Controller
      */
     public function index()
     {
-        return view('dashboard.home');
+        $user = Auth::user();
+
+        // Récupère les projets créés par l'utilisateur
+        $ownedProjects = $user->projectsOwned()->latest()->get();
+
+        // Récupère les projets où il est collaborateur
+        $collabProjects = $user->projectCollaborations()->latest()->get();
+
+        // Merge et tri (en supprimant les doublons éventuels)
+        $projects = $ownedProjects->merge($collabProjects)->unique('id')->sortByDesc('created_at')->values();
+
+        // Même principe pour les archivés (soft deleted)
+        $archivedOwned = $user->projectsOwned()->onlyTrashed()->latest()->get();
+        $archivedCollab = $user->projectCollaborations()->onlyTrashed()->latest()->get();
+
+        $archivedProjects = $archivedOwned->merge($archivedCollab)->unique('id')->sortByDesc('created_at')->values();
+
+        return view('pages.dashboard.home', compact('projects', 'archivedProjects'));
     }
 
     /**

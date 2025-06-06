@@ -40,8 +40,9 @@ if (['/prices'].includes(window.location.pathname)) {
     });
 }
 
-if (['/dashboard', '/admin'].includes(window.location.pathname)) {
+if (window.location.pathname.startsWith('/admin') || window.location.pathname === '/dashboard') {
     document.addEventListener('DOMContentLoaded', () => {
+        console.log('Initialisation du toggle de la sidebar');
         initSidebarToggle();
     });
 }
