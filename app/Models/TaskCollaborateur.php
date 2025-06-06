@@ -12,12 +12,6 @@ class TaskCollaborateur extends Model
 
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $fillable = ['id', 'task_id', 'user_id'];
+    protected $fillable = ['task_id', 'user_id'];
     public $timestamps = false;
-
-    protected static function boot()
-    {
-        parent::boot();
-        static::creating(fn($model) => $model->id ??= (string) Str::uuid());
-    }
 }

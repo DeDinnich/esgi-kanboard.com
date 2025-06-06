@@ -13,7 +13,6 @@ class ProjectCollaborateurFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => Str::uuid(),
             'project_id' => null, // assigné manuellement dans le seeder
             'user_id' => null,    // assigné manuellement dans le seeder
         ];

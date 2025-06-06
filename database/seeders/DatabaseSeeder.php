@@ -69,7 +69,7 @@ class DatabaseSeeder extends Seeder
         }
 
         // Crée 1000 utilisateurs
-        $users = User::factory(1000)->create();
+        $users = User::factory(50)->create();
 
         // Création de projets
         $users->each(function ($user) use ($users) {

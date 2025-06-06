@@ -12,9 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('project_collaborateurs', function (Blueprint $table) {
-            $table->uuid('id')->primary();
             $table->uuid('project_id');
             $table->uuid('user_id');
+
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            $table->primary(['project_id', 'user_id']); // composite key
         });
     }
 

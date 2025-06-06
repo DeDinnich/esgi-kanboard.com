@@ -13,7 +13,6 @@ class TaskCollaborateurFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => Str::uuid(),
             'task_id' => null, // assigné manuellement dans le seeder
             'user_id' => null,
         ];

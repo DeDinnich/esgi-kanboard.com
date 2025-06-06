@@ -12,9 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('task_collaborateurs', function (Blueprint $table) {
-            $table->uuid('id')->primary();
             $table->uuid('task_id');
             $table->uuid('user_id');
+
+            $table->foreign('task_id')->references('id')->on('tasks')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            $table->primary(['task_id', 'user_id']); // composite key
         });
     }
 

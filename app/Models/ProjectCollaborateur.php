@@ -12,12 +12,6 @@ class ProjectCollaborateur extends Model
 
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $fillable = ['id', 'project_id', 'user_id'];
+    protected $fillable = ['project_id', 'user_id'];
     public $timestamps = false;
-
-    protected static function boot()
-    {
-        parent::boot();
-        static::creating(fn($model) => $model->id ??= (string) Str::uuid());
-    }
 }

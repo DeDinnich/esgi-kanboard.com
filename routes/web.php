@@ -9,6 +9,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\DashController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\KanbanController;
+use App\Http\Controllers\ProjectInvitationController;
+use App\Http\Controllers\ListController;
 
 Route::view('/', 'pages.landing.index')->name('home');
 Route::view('/about', 'pages.landing.about')->name('about');
@@ -34,10 +37,24 @@ Route::post('/password/email', [AuthController::class, 'sendResetLink'])->name('
 Route::get('/password/reset/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
 Route::post('/password/reset', [AuthController::class, 'resetPassword'])->name('password.update');
 
+Route::get('/projects/invite/accept/{token}', [ProjectInvitationController::class, 'accept'])->name('projects.invite.accept');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashController::class, 'index'])->name('dashboard');
     Route::get('/profile', [DashController::class, 'profile'])->name('profile');
     Route::put('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/projects/create', [DashController::class, 'storeProject'])->name('projects.store');
+    Route::get('/project/{project}/kanban', [KanbanController::class, 'show'])->name('projects.show');
+    Route::get('/projects/{project}/list', [ListController::class, 'show'])->name('projects.showList');
+
+    Route::put('/columns/{column}/rename', [KanbanController::class, 'renameColumn'])->name('columns.rename');
+    Route::put('/columns/{column}/move', [KanbanController::class, 'moveColumn'])->name('columns.move');
+    Route::delete('/columns/{column}', [KanbanController::class, 'deleteColumn'])->name('columns.delete');
+    Route::post('/columns/{column}/tasks', [KanbanController::class, 'createTask'])->name('tasks.store');
+    Route::post('/columns/create', [KanbanController::class, 'storeColumn'])->name('columns.store');
+    Route::delete('/tasks/{task}', [KanbanController::class, 'destroyTask'])->name('tasks.destroy');
+    Route::put('/tasks/{task}', [KanbanController::class, 'updateTask'])->name('tasks.update');
+    Route::post('/projects/{project}/invite', [ProjectInvitationController::class, 'invite'])->name('projects.invite');
 });
 
 Route::middleware(['auth'])->group(function () {
