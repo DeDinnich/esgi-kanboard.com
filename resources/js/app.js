@@ -13,6 +13,7 @@ import initBannerHoverVideo from './components/bannerHoverVideo.js';
 import initKeyNumberCounters from './components/counter.js';
 import initStripePayment from './components/stripe.js';
 import initSidebarToggle from './components/sidebarToggle';
+import { renderBarChart, renderPieChart } from './components/adminCharts.js';
 
 
 
@@ -39,8 +40,18 @@ if (['/prices'].includes(window.location.pathname)) {
     });
 }
 
-if (['/dashboard'].includes(window.location.pathname)) {
+if (['/dashboard', '/admin'].includes(window.location.pathname)) {
     document.addEventListener('DOMContentLoaded', () => {
         initSidebarToggle();
+    });
+}
+
+if (['/admin'].includes(window.location.pathname)) {
+    document.addEventListener('DOMContentLoaded', () => {
+        renderBarChart('userChart', userLabels, userData, 'Utilisateurs');
+        renderBarChart('projectChart', projectLabels, projectData, 'Projets');
+        renderBarChart('taskChart', taskLabels, taskData, 'Tâches');
+        renderPieChart('subscriptionChart', subLabels, subData);
+        renderPieChart('completionChart', completionLabels, completionData);
     });
 }

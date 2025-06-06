@@ -6,6 +6,12 @@
 <header class="dashboard-header d-flex justify-content-between align-items-center px-4 py-3 bg-white border-bottom shadow-sm">
     <div>
         <strong>Bienvenue {{ $user->first_name }} {{ $user->last_name }}</strong>
+
+        @if ($user->admin)
+            <a href="{{ route('admin.dashboard') }}" class="btn btn-sm btn-outline-primary ms-3">
+                <i class="fas fa-user-shield me-1"></i> Espace d'administration
+            </a>
+        @endif
     </div>
     <div class="d-flex align-items-center gap-3 position-relative">
         {{-- Cloche --}}

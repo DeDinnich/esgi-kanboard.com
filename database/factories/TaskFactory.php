@@ -27,6 +27,7 @@ class TaskFactory extends Factory
             'priority' => $this->faker->randomElement(['basse', 'moyenne', 'élevée']),
             'order' => $this->faker->numberBetween(1, 20),
             'date_limite' => $this->faker->optional()->date(),
+            'completed_at' => $this->faker->boolean(50) ? now() : null,
         ];
     }
 }

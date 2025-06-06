@@ -86,6 +86,15 @@ class AuthController extends Controller
         }
     }
 
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('home')->with('success', 'Vous avez été déconnecté avec succès.');
+    }
+
     public function verify(Request $request, User $user)
     {
         if (! $request->hasValidSignature()) {

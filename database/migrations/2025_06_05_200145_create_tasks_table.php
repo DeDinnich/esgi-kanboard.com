@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('priority', ['basse', 'moyenne', 'élevée'])->nullable();
             $table->integer('order')->default(0);
             $table->date('date_limite')->nullable();
+            $table->timestamp('completed_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

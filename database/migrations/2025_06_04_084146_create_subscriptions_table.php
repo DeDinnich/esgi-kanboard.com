@@ -16,6 +16,7 @@ return new class extends Migration
                 $table->boolean("option$i")->default(false);
             }
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
