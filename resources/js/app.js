@@ -14,7 +14,7 @@ import initKeyNumberCounters from './components/counter.js';
 import initStripePayment from './components/stripe.js';
 import initSidebarToggle from './components/sidebarToggle';
 import { renderBarChart, renderPieChart } from './components/adminCharts.js';
-
+import initCalendarView from './components/calendarView';
 
 
 initEcho();      // initialise Echo
@@ -54,5 +54,12 @@ if (['/admin'].includes(window.location.pathname)) {
         renderBarChart('taskChart', taskLabels, taskData, 'Tâches');
         renderPieChart('subscriptionChart', subLabels, subData);
         renderPieChart('completionChart', completionLabels, completionData);
+    });
+}
+
+if (window.location.pathname.includes('/calendar')) {
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('Init calendrier'); // ← ajoute ceci pour débug
+        initCalendarView();
     });
 }

@@ -17,17 +17,17 @@
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="{{ route('projects.show', $project->id) }}">Kanban</a></li>
                 <li><a class="dropdown-item" href="{{ route('projects.showList', $project->id) }}">Liste</a></li>
-                <li><a class="dropdown-item" href="#">Calendrier</a></li>
+                <li><a class="dropdown-item" href="{{ route('projects.showCalendar', $project->id) }}">Calendrier</a></li>
             </ul>
         </div>
 
-        <button class="btn btn-sm btn-outline-secondary position-relative">
+        {{-- <button class="btn btn-sm btn-outline-secondary position-relative">
             <i class="fas fa-bell"></i>
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                 3
                 <span class="visually-hidden">notifications</span>
             </span>
-        </button>
+        </button> --}}
 
         <div class="dropdown">
             <button class="btn btn-sm btn-outline-secondary rounded-circle text-uppercase fw-bold" type="button" data-bs-toggle="dropdown">

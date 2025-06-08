@@ -12,6 +12,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\KanbanController;
 use App\Http\Controllers\ProjectInvitationController;
 use App\Http\Controllers\ListController;
+use App\Http\Controllers\CalendarController;
 
 Route::view('/', 'pages.landing.index')->name('home');
 Route::view('/about', 'pages.landing.about')->name('about');
@@ -46,6 +47,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/projects/create', [DashController::class, 'storeProject'])->name('projects.store');
     Route::get('/project/{project}/kanban', [KanbanController::class, 'show'])->name('projects.show');
     Route::get('/projects/{project}/list', [ListController::class, 'show'])->name('projects.showList');
+    Route::get('/projects/{project}/calendar', [CalendarController::class, 'show'])->name('projects.showCalendar');
+    Route::get('/projects/{project}/tasks', [CalendarController::class, 'getTasks'])->name('projects.getTasks');
+    Route::get('/projects/{project}/calendar/ical', [CalendarController::class, 'generateIcal'])->name('projects.calendar.ical');
 
     Route::put('/columns/{column}/rename', [KanbanController::class, 'renameColumn'])->name('columns.rename');
     Route::put('/columns/{column}/move', [KanbanController::class, 'moveColumn'])->name('columns.move');

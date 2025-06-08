@@ -1,6 +1,8 @@
 @extends('layouts.project')
 
 @section('content')
+@include('partials.project.modals.inviteMember', ['project' => $project])
+
     <div class="container py-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="mb-0">Tâches du projet : {{ $project->nom }}</h3>
