@@ -29,300 +29,393 @@ export default function initCalendarView() {
     let currentView = localStorage.getItem('calendarView') || 'month';
     viewMode.value = currentView;
 
+    let loadedTasks = [];
+
+    const taskByDate = (date) => {
+        const dayStr = format(date, 'yyyy-MM-dd');
+        return loadedTasks.filter(t => t.date_limite?.startsWith(dayStr));
+    };
+
     function fetchTasks(start, end) {
         const match = window.location.pathname.match(/\/projects\/([^\/]+)\//);
         const projectId = match ? match[1] : null;
 
-        if (!projectId) {
-            console.error('❌ Impossible de récupérer l’ID du projet depuis l’URL.');
-            return;
-        }
+        if (!projectId) return console.error('❌ Impossible de récupérer l’ID du projet depuis l’URL.');
 
-        fetch(`/projects/${projectId}/tasks?start=${start}&end=${end}`)
+        return fetch(`/projects/${projectId}/tasks?start=${start}&end=${end}`)
             .then(res => res.json())
             .then(data => {
-                console.log('📦 Tâches chargées', data);
-                // TODO: afficher les tâches
+                loadedTasks = data;
             })
             .catch(err => console.error('Erreur fetch tasks:', err));
     }
 
+        function buildTaskModal(date, tasks) {
+        const id = `modal-tasks-${format(date, 'yyyy-MM-dd')}`;
+        if (document.getElementById(id)) return; // Déjà existant
+
+        const modal = document.createElement('div');
+        modal.className = 'modal fade';
+        modal.id = id;
+        modal.tabIndex = -1;
+
+        modal.innerHTML = `
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Tâches du ${format(date, 'dd/MM/yyyy')}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        ${tasks.length === 0 ? '<p class="text-muted">Aucune tâche.</p>' : `
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-sm">
+                                    <thead><tr><th>Nom</th><th>Priorité</th><th>Collaborateurs</th></tr></thead>
+                                    <tbody>
+                                        ${tasks.map(t => `
+                                            <tr>
+                                                <td>${t.nom}</td>
+                                                <td>${t.priority ?? '—'}</td>
+                                                <td>${t.collaborateurs?.map(c => `${c.first_name} ${c.last_name}`).join(', ')}</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        `}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+    }
+
     function renderMonthView() {
         console.log('📅 Rendu de la vue mois');
-
         container.innerHTML = '';
 
         const start = startOfWeek(startOfMonth(currentDate), { locale: fr });
         const end = endOfWeek(endOfMonth(currentDate), { locale: fr });
-        fetchTasks(start.toISOString(), end.toISOString());
 
-        let day = start;
+        fetchTasks(start.toISOString(), end.toISOString()).then(() => {
+            monthLabel.textContent = format(currentDate, 'MMMM yyyy', { locale: fr });
 
-        // Titres des jours de la semaine
-        const daysRow = document.createElement('div');
-        daysRow.className = 'row fw-bold text-center mb-2';
-        const daysOfWeek = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-        for (let d = 0; d < 7; d++) {
-            const dayCol = document.createElement('div');
-            dayCol.className = 'col text-center';
-            dayCol.textContent = daysOfWeek[d];
-            daysRow.appendChild(dayCol);
-        }
-        container.appendChild(daysRow);
+            let day = start;
 
-        while (day <= end) {
-            const row = document.createElement('div');
-            row.className = 'row g-1 mb-1';
+            const daysRow = document.createElement('div');
+            daysRow.className = 'row fw-bold text-center mb-2';
+            const daysOfWeek = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+            for (let d = 0; d < 7; d++) {
+                const dayCol = document.createElement('div');
+                dayCol.className = 'col text-center';
+                dayCol.textContent = daysOfWeek[d];
+                daysRow.appendChild(dayCol);
+            }
+            container.appendChild(daysRow);
 
-            for (let i = 0; i < 7; i++) {
-                const col = document.createElement('div');
-                col.className = 'col text-center';
+            while (day <= end) {
+                const row = document.createElement('div');
+                row.className = 'row g-1 mb-1';
 
-                const card = document.createElement('div');
-                card.className = 'border rounded p-2 h-100';
-                card.style.minHeight = '100px';
+                for (let i = 0; i < 7; i++) {
+                    const col = document.createElement('div');
+                    col.className = 'col text-center';
 
-                if (!isSameMonth(day, currentDate)) {
-                    card.classList.add('bg-light', 'text-muted');
+                    const card = document.createElement('div');
+                    card.className = 'border rounded p-2 h-100';
+                    card.style.minHeight = '100px';
+
+                    if (!isSameMonth(day, currentDate)) {
+                        card.classList.add('bg-light', 'text-muted');
+                    }
+
+                    const dateLabel = document.createElement('div');
+                    dateLabel.className = 'fw-bold small';
+                    dateLabel.textContent = format(day, 'd', { locale: fr });
+
+                    card.appendChild(dateLabel);
+
+                    const tasks = taskByDate(day);
+                    if (tasks.length > 0) {
+                        const btn = document.createElement('button');
+                        btn.className = 'btn btn-sm btn-outline-primary mt-2';
+                        btn.textContent = `${tasks.length} tâche(s)`;
+                        btn.dataset.bsToggle = 'modal';
+                        btn.dataset.bsTarget = `#modal-tasks-${format(day, 'yyyy-MM-dd')}`;
+
+                        card.appendChild(btn);
+                        buildTaskModal(day, tasks);
+                    }
+
+                    col.appendChild(card);
+                    row.appendChild(col);
+
+                    day = addDays(day, 1);
                 }
 
-                const dateLabel = document.createElement('div');
-                dateLabel.className = 'fw-bold small';
-                dateLabel.textContent = format(day, 'd', { locale: fr });
-
-                card.appendChild(dateLabel);
-                col.appendChild(card);
-                row.appendChild(col);
-
-                day = addDays(day, 1);
+                container.appendChild(row);
             }
 
-            container.appendChild(row);
-        }
-
-        console.log('✅ Vue mois affichée');
+            console.log('✅ Vue mois affichée');
+        });
     }
 
+    // --- renderWeekView ---
     function renderWeekView() {
         console.log('📆 Rendu de la vue semaine');
         container.innerHTML = '';
 
         const start = startOfWeek(currentDate, { locale: fr });
         const end = endOfWeek(currentDate, { locale: fr });
-        fetchTasks(start.toISOString(), end.toISOString());
-        let day = start;
 
-        const label = `Semaine du ${format(start, 'd')} au ${format(end, 'd MMMM yyyy', { locale: fr })}`;
-        monthLabel.textContent = label;
+        fetchTasks(start.toISOString(), end.toISOString()).then(() => {
+            monthLabel.textContent = `Semaine du ${format(start, 'd')} au ${format(end, 'd MMMM yyyy', { locale: fr })}`;
 
-        const daysRow = document.createElement('div');
-        daysRow.className = 'row fw-bold text-center mb-2';
-        const daysOfWeek = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-        for (let d = 0; d < 7; d++) {
-            const dayCol = document.createElement('div');
-            dayCol.className = 'col text-center';
-            dayCol.textContent = daysOfWeek[d];
-            daysRow.appendChild(dayCol);
-        }
-        container.appendChild(daysRow);
+            const daysRow = document.createElement('div');
+            daysRow.className = 'row fw-bold text-center mb-2';
+            const daysOfWeek = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+            for (let d = 0; d < 7; d++) {
+                const dayCol = document.createElement('div');
+                dayCol.className = 'col text-center';
+                dayCol.textContent = daysOfWeek[d];
+                daysRow.appendChild(dayCol);
+            }
+            container.appendChild(daysRow);
 
-        const row = document.createElement('div');
-        row.className = 'row g-1 align-items-stretch'; // ⚠️
+            const row = document.createElement('div');
+            row.className = 'row g-1 align-items-stretch';
 
-        for (let i = 0; i < 7; i++) {
-            const col = document.createElement('div');
-            col.className = 'col text-center d-flex flex-column'; // ⚠️
+            let day = start;
+            for (let i = 0; i < 7; i++) {
+                const col = document.createElement('div');
+                col.className = 'col text-center d-flex flex-column';
 
-            const card = document.createElement('div');
-            card.className = 'border rounded p-2 flex-fill bg-white'; // ⚠️
-            card.style.minHeight = '72vh';
+                const card = document.createElement('div');
+                card.className = 'border rounded p-2 flex-fill bg-white';
+                card.style.minHeight = '72vh';
 
-            const dateLabel = document.createElement('div');
-            dateLabel.className = 'fw-bold small';
-            dateLabel.textContent = format(day, 'd', { locale: fr });
+                const dateLabel = document.createElement('div');
+                dateLabel.className = 'fw-bold small';
+                dateLabel.textContent = format(day, 'd', { locale: fr });
 
-            card.appendChild(dateLabel);
-            col.appendChild(card);
-            row.appendChild(col);
+                card.appendChild(dateLabel);
 
-            day = addDays(day, 1);
-        }
+                const tasks = taskByDate(day);
+                tasks.forEach(task => {
+                    const taskDiv = document.createElement('div');
+                    taskDiv.className = 'task-card p-2 border rounded bg-light text-start mb-2';
+                    taskDiv.innerHTML = `<strong>${task.nom}</strong><br><small>${task.priority}</small>`;
+                    taskDiv.dataset.bsToggle = 'modal';
+                    taskDiv.dataset.bsTarget = `#modal-tasks-${format(day,'yyyy-MM-dd')}`;
+                    card.appendChild(taskDiv);
+                });
 
-        container.appendChild(row);
+                if (tasks.length > 0) buildTaskModal(day, tasks);
 
-        console.log('✅ Vue semaine affichée');
+                col.appendChild(card);
+                row.appendChild(col);
+                day = addDays(day, 1);
+            }
+
+            container.appendChild(row);
+            console.log('✅ Vue semaine affichée');
+        });
     }
 
+    // --- renderThreeDayView ---
     function renderThreeDayView() {
         console.log('🗓️ Rendu de la vue 3 jours');
         container.innerHTML = '';
 
-        // Calcul des 3 jours à afficher
         const center = currentDate;
         const start = addDays(center, -1);
         const end = addDays(center, 2);
-        fetchTasks(start.toISOString(), end.toISOString());
         const days = [start, addDays(start, 1), addDays(start, 2)];
 
-        // Label en haut
-        const label = `Du ${format(start, 'd')} au ${format(addDays(start, 2), 'd MMMM yyyy', { locale: fr })}`;
-        monthLabel.textContent = label;
+        fetchTasks(start.toISOString(), end.toISOString()).then(() => {
+            monthLabel.textContent = `Du ${format(start, 'd')} au ${format(end, 'd MMMM yyyy', { locale: fr })}`;
 
-        const row = document.createElement('div');
-        row.className = 'row g-1 align-items-stretch';
+            const row = document.createElement('div');
+            row.className = 'row g-1 align-items-stretch';
 
-        // --- Mini calendrier sur 4 colonnes
-        const calendarCol = document.createElement('div');
-        calendarCol.className = 'col-12 col-md-4';
+            const calendarCol = document.createElement('div');
+            calendarCol.className = 'col-12 col-md-4';
+            const calendarCard = document.createElement('div');
+            calendarCard.className = 'border rounded p-2';
 
-        const calendarCard = document.createElement('div');
-        calendarCard.className = 'border rounded p-2';
+            const calTitle = document.createElement('div');
+            calTitle.className = 'fw-bold mb-2';
+            calTitle.textContent = format(currentDate, 'MMMM yyyy', { locale: fr });
+            calendarCard.appendChild(calTitle);
 
-        const calTitle = document.createElement('div');
-        calTitle.className = 'fw-bold mb-2';
-        calTitle.textContent = format(currentDate, 'MMMM yyyy', { locale: fr });
-        calendarCard.appendChild(calTitle);
+            const daysRow = document.createElement('div');
+            daysRow.className = 'd-flex mb-1 gap-1 fw-bold text-center';
+            const daysOfWeek = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+            for (let d = 0; d < 7; d++) {
+                const dayCol = document.createElement('div');
+                dayCol.className = 'flex-fill small text-center';
+                dayCol.textContent = daysOfWeek[d];
+                daysRow.appendChild(dayCol);
+            }
+            calendarCard.appendChild(daysRow);
 
-        // Titres des jours
-        const daysRow = document.createElement('div');
-        daysRow.className = 'd-flex mb-1 gap-1 fw-bold text-center';
-        const daysOfWeek = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-        for (let d = 0; d < 7; d++) {
-            const dayCol = document.createElement('div');
-            dayCol.className = 'flex-fill small text-center';
-            dayCol.textContent = daysOfWeek[d];
-            daysRow.appendChild(dayCol);
-        }
-        calendarCard.appendChild(daysRow);
+            let calDay = startOfWeek(startOfMonth(currentDate), { locale: fr });
+            const endCalDay = endOfWeek(endOfMonth(currentDate), { locale: fr });
 
-        // Mini calendrier
-        const startMonth = startOfWeek(startOfMonth(currentDate), { locale: fr });
-        const endMonth = endOfWeek(endOfMonth(currentDate), { locale: fr });
+            while (calDay <= endCalDay) {
+                const weekRow = document.createElement('div');
+                weekRow.className = 'd-flex mb-1 gap-1';
 
-        let calDay = startMonth;
-        while (calDay <= endMonth) {
-            const weekRow = document.createElement('div');
-            weekRow.className = 'd-flex mb-1 gap-1';
-
-            for (let i = 0; i < 7; i++) {
-                const dayDiv = document.createElement('div');
-                dayDiv.className = 'text-center border rounded flex-fill py-1 small';
-
-                if (isSameMonth(calDay, currentDate)) {
-                    dayDiv.textContent = format(calDay, 'd', { locale: fr });
-                } else {
-                    dayDiv.classList.add('invisible'); // Ne pas afficher les jours hors mois
-                    dayDiv.textContent = '.'; // nécessaire pour la hauteur
+                for (let i = 0; i < 7; i++) {
+                    const dayDiv = document.createElement('div');
+                    dayDiv.className = 'text-center border rounded flex-fill py-1 small';
+                    if (isSameMonth(calDay, currentDate)) {
+                        dayDiv.textContent = format(calDay, 'd', { locale: fr });
+                        const count = taskByDate(calDay).length;
+                        if (count > 0) {
+                            const badge = document.createElement('span');
+                            badge.className = 'badge bg-primary ms-1';
+                            badge.textContent = count;
+                            dayDiv.appendChild(badge);
+                        }
+                    } else {
+                        dayDiv.classList.add('invisible');
+                        dayDiv.textContent = '.';
+                    }
+                    weekRow.appendChild(dayDiv);
+                    calDay = addDays(calDay, 1);
                 }
 
-                weekRow.appendChild(dayDiv);
-                calDay = addDays(calDay, 1);
+                calendarCard.appendChild(weekRow);
             }
 
-            calendarCard.appendChild(weekRow);
-        }
+            calendarCol.appendChild(calendarCard);
+            row.appendChild(calendarCol);
 
-        calendarCol.appendChild(calendarCard);
-        row.appendChild(calendarCol);
+            days.forEach(date => {
+                const col = document.createElement('div');
+                col.className = 'col text-center d-flex flex-column';
 
-        // --- 3 colonnes : jours détaillés
-        for (let i = 0; i < 3; i++) {
-            const col = document.createElement('div');
-            col.className = 'col text-center d-flex flex-column';
+                const card = document.createElement('div');
+                card.className = 'border rounded p-2 flex-fill bg-white';
+                card.style.minHeight = '72vh';
 
-            const card = document.createElement('div');
-            card.className = 'border rounded p-2 flex-fill bg-white';
-            card.style.minHeight = '72vh';
+                const dateLabel = document.createElement('div');
+                dateLabel.className = 'fw-bold small mb-2';
+                dateLabel.textContent = format(date, 'EEEE d', { locale: fr });
 
-            const dateLabel = document.createElement('div');
-            dateLabel.className = 'fw-bold small mb-2';
-            dateLabel.textContent = format(days[i], 'EEEE d', { locale: fr });
+                card.appendChild(dateLabel);
 
-            card.appendChild(dateLabel);
-            col.appendChild(card);
-            row.appendChild(col);
-        }
+                const tasks = taskByDate(date);
+                tasks.forEach(task => {
+                    const taskDiv = document.createElement('div');
+                    taskDiv.className = 'task-card p-2 border rounded bg-light text-start mb-2';
+                    taskDiv.innerHTML = `<strong>${task.nom}</strong><br><small>${task.priority}</small>`;
+                    taskDiv.dataset.bsToggle = 'modal';
+                    taskDiv.dataset.bsTarget = `#modal-tasks-${format(date,'yyyy-MM-dd')}`;
+                    card.appendChild(taskDiv);
+                });
 
-        container.appendChild(row);
+                if (tasks.length > 0) {
+                    buildTaskModal(date, tasks);
+                }
 
-        console.log('✅ Vue 3 jours affichée');
+                col.appendChild(card);
+                row.appendChild(col);
+            });
+
+            container.appendChild(row);
+            console.log('✅ Vue 3 jours affichée');
+        });
     }
 
+    // --- renderDayView ---
     function renderDayView() {
         console.log('📆 Rendu de la vue jour');
         container.innerHTML = '';
 
-        const start = currentDate;
-        const end = currentDate;
-        fetchTasks(start.toISOString(), end.toISOString());
-
-        // Label global
-        monthLabel.textContent = `Jour du ${format(currentDate, 'd MMMM yyyy', { locale: fr })}`;
-
-        const row = document.createElement('div');
-        row.className = 'row g-1 align-items-stretch';
-
-        // --- Mini calendrier sur 4 colonnes
-        const calendarCol = document.createElement('div');
-        calendarCol.className = 'col-12 col-md-4';
-
-        const calendarCard = document.createElement('div');
-        calendarCard.className = 'border rounded p-2';
-
-        const calTitle = document.createElement('div');
-        calTitle.className = 'fw-bold mb-2';
-        calTitle.textContent = format(currentDate, 'MMMM yyyy', { locale: fr });
-        calendarCard.appendChild(calTitle);
-
-        // Mini calendrier
         const startMonth = startOfWeek(startOfMonth(currentDate), { locale: fr });
         const endMonth = endOfWeek(endOfMonth(currentDate), { locale: fr });
 
-        let calDay = startMonth;
-        while (calDay <= endMonth) {
-            const weekRow = document.createElement('div');
-            weekRow.className = 'd-flex mb-1 gap-1';
+        fetchTasks(startMonth.toISOString(), endMonth.toISOString()).then(() => {
+            monthLabel.textContent = `Jour du ${format(currentDate, 'd MMMM yyyy', { locale: fr })}`;
 
-            for (let i = 0; i < 7; i++) {
-                const dayDiv = document.createElement('div');
-                dayDiv.className = 'text-center border rounded flex-fill py-1 small';
+            const row = document.createElement('div');
+            row.className = 'row g-1 align-items-stretch';
 
-                if (isSameMonth(calDay, currentDate)) {
-                    dayDiv.textContent = format(calDay, 'd', { locale: fr });
-                } else {
-                    dayDiv.classList.add('invisible'); // Ne pas afficher les jours hors mois
-                    dayDiv.textContent = '.'; // nécessaire pour la hauteur
+            const calendarCol = document.createElement('div');
+            calendarCol.className = 'col-12 col-md-4';
+            const calendarCard = document.createElement('div');
+            calendarCard.className = 'border rounded p-2';
+
+            const calTitle = document.createElement('div');
+            calTitle.className = 'fw-bold mb-2';
+            calTitle.textContent = format(currentDate, 'MMMM yyyy', { locale: fr });
+            calendarCard.appendChild(calTitle);
+
+            let calDay = startMonth;
+            while (calDay <= endMonth) {
+                const weekRow = document.createElement('div');
+                weekRow.className = 'd-flex mb-1 gap-1';
+
+                for (let i = 0; i < 7; i++) {
+                    const dayDiv = document.createElement('div');
+                    dayDiv.className = 'text-center border rounded flex-fill py-1 small';
+                    if (isSameMonth(calDay, currentDate)) {
+                        dayDiv.textContent = format(calDay, 'd', { locale: fr });
+                        const taskCount = taskByDate(calDay).length;
+                        if (taskCount > 0) {
+                            const badge = document.createElement('span');
+                            badge.className = 'badge bg-primary ms-1';
+                            badge.textContent = taskCount;
+                            dayDiv.appendChild(badge);
+                        }
+                    } else {
+                        dayDiv.classList.add('invisible');
+                        dayDiv.textContent = '.';
+                    }
+                    weekRow.appendChild(dayDiv);
+                    calDay = addDays(calDay, 1);
                 }
 
-                weekRow.appendChild(dayDiv);
-                calDay = addDays(calDay, 1);
+                calendarCard.appendChild(weekRow);
             }
 
-            calendarCard.appendChild(weekRow);
-        }
+            calendarCol.appendChild(calendarCard);
+            row.appendChild(calendarCol);
 
-        calendarCol.appendChild(calendarCard);
-        row.appendChild(calendarCol);
+            const detailCol = document.createElement('div');
+            detailCol.className = 'col-12 col-md-8 d-flex flex-column';
 
-        // --- Détail du jour sur 3 colonnes
-        const detailCol = document.createElement('div');
-        detailCol.className = 'col-12 col-md-8 d-flex flex-column';
+            const dayCard = document.createElement('div');
+            dayCard.className = 'border rounded p-3 flex-fill bg-white';
+            dayCard.style.minHeight = '72vh';
 
-        const dayCard = document.createElement('div');
-        dayCard.className = 'border rounded p-3 flex-fill bg-white';
-        dayCard.style.minHeight = '72vh';
+            const dateLabel = document.createElement('div');
+            dateLabel.className = 'fw-bold mb-2';
+            dateLabel.textContent = format(currentDate, 'EEEE d MMMM yyyy', { locale: fr });
 
-        const dateLabel = document.createElement('div');
-        dateLabel.className = 'fw-bold mb-2';
-        dateLabel.textContent = format(currentDate, 'EEEE d MMMM yyyy', { locale: fr });
+            dayCard.appendChild(dateLabel);
 
-        dayCard.appendChild(dateLabel);
-        detailCol.appendChild(dayCard);
-        row.appendChild(detailCol);
+            const tasks = taskByDate(currentDate);
+            tasks.forEach(task => {
+                const taskDiv = document.createElement('div');
+                taskDiv.className = 'task-card p-2 border rounded bg-light text-start mb-2';
+                taskDiv.innerHTML = `<strong>${task.nom}</strong><br><small>${task.priority}</small>`;
+                taskDiv.dataset.bsToggle = 'modal';
+                taskDiv.dataset.bsTarget = `#modal-tasks-${format(currentDate,'yyyy-MM-dd')}`;
+                dayCard.appendChild(taskDiv);
+            });
 
-        container.appendChild(row);
+            if (tasks.length > 0) buildTaskModal(currentDate, tasks);
 
-        console.log('✅ Vue jour affichée');
+            detailCol.appendChild(dayCard);
+            row.appendChild(detailCol);
+
+            container.appendChild(row);
+            console.log('✅ Vue jour affichée');
+        });
     }
 
     function renderCalendar() {
