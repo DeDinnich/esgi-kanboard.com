@@ -27,10 +27,10 @@ class ContactController extends Controller
             // Accusé de réception au client
             Mail::to($validated['email'])->send(new ContactConfirmation($validated));
 
-            return back()->with('success', 'Votre message a bien été envoyé. Un accusé de réception vous a été envoyé par email.');
+            return back()->with('success', 'Votre message a bien été envoyé. Un accusé de réception vous a été envoyé par email.')->withFragment('contact');
         } catch (\Exception $e) {
             Log::error('Erreur lors de l’envoi du formulaire de contact : ' . $e->getMessage());
-            return back()->with('error', 'Une erreur est survenue. Veuillez réessayer plus tard.');
+            return back()->with('error', 'Une erreur est survenue. Veuillez réessayer plus tard.')->withFragment('contact');
         }
     }
 }

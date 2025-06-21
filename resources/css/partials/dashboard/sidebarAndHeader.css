@@ -90,3 +90,25 @@
 .custom-dropdown-menu{
     left: -200px !important; /* Ajuste la largeur du menu déroulant */
 }
+
+/* Fond du aside */
+#dashboard-aside {
+    background-color: #D7E0E9;
+}
+
+/* Footer centré */
+#aside-footer {
+    text-align: center;
+}
+
+/* Liens projets : noir, pas de soulignement, effet au hover */
+#dashboard-aside a {
+    color: #000;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+#dashboard-aside a:hover {
+    color: var(--kanboard-gold); /* ou directement #C7B09A */
+    text-decoration: underline;
+}

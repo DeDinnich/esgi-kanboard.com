@@ -10,11 +10,11 @@
     {{-- Bannière --}}
     @include('components.landing.index.banner')
 
-    {{-- Contenu principal --}}
-    @include('components.landing.index.content')
-
     {{-- Chiffres clés --}}
     @include('components.landing.index.keyNumbers')
+
+    {{-- Contenu principal --}}
+    @include('components.landing.index.content')
 
     {{-- Formulaire de contact --}}
     @include('components.landing.index.contact')

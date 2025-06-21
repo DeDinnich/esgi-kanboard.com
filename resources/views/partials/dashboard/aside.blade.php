@@ -1,4 +1,4 @@
-<aside id="dashboard-aside" class="bg-white border-end d-flex flex-column shadow-sm transition-all" style="width: 260px; min-height: 100vh;">
+<aside id="dashboard-aside" class="border-end d-flex flex-column shadow-sm transition-all" style="width: 260px; min-height: 100vh;">
     <div class="aside-top d-flex justify-content-between align-items-center p-3 border-bottom">
         <span id="aside-title" class="fw-bold fs-4">KANBOARD</span>
         <button id="toggle-sidebar" class="btn btn-sm btn-outline-secondary" title="Réduire">

@@ -3,6 +3,7 @@
 @import "mapbox-gl/dist/mapbox-gl.css";
 
 /* Layouts */
+@import "layouts/reset.css";
 
 /* Pages */
 
@@ -17,3 +18,5 @@
 /* Components */
 @import "components/landing/banner.css";
 @import "components/landing/prices.css";
+@import "components/landing/numbers.css";
+@import "components/landing/contact.css";

@@ -1,9 +1,9 @@
-<section id="solution" class="py-5 bg-light">
+<section id="solution" class="py-5">
     <div class="container">
         {{-- Bloc 1 : Image gauche + texte droite --}}
         <div class="row align-items-center mb-5">
             <div class="col-md-4 text-center mb-4 mb-md-0">
-                <img src="{{ asset('images/project.png') }}" alt="Créer un projet" class="img-fluid rounded shadow">
+                <img src="{{ asset('images/temp.png') }}" alt="Créer un projet" class="img-fluid rounded shadow">
             </div>
             <div class="col-md-8">
                 <h3 class="mb-3">Créez et gérez vos projets en toute simplicité</h3>
@@ -19,7 +19,7 @@
         {{-- Bloc 2 : Texte gauche + image droite --}}
         <div class="row align-items-center mb-5 flex-md-row-reverse">
             <div class="col-md-4 text-center mb-4 mb-md-0">
-                <img src="{{ asset('images/teamwork.png') }}" alt="Collaboration équipe" class="img-fluid rounded shadow">
+                <img src="{{ asset('images/temp.png') }}" alt="Collaboration équipe" class="img-fluid rounded shadow">
             </div>
             <div class="col-md-8">
                 <h3 class="mb-3">Collaborez facilement avec votre équipe</h3>
@@ -38,7 +38,7 @@
         </div>
         <div class="row align-items-center justify-content-center">
             <div class="col-md-4 text-center mb-4 mb-md-0">
-                <img src="{{ asset('images/views.png') }}" alt="Changer de vue" class="img-fluid rounded shadow">
+                <img src="{{ asset('images/temp.png') }}" alt="Changer de vue" class="img-fluid rounded shadow">
             </div>
             <div class="col-md-6 fs-5">
                 <p>

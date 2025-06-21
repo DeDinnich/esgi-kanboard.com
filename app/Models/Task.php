@@ -13,9 +13,15 @@ class Task extends Model
 
     public $incrementing = false;
     protected $keyType = 'string';
+
     protected $fillable = [
         'id', 'user_id', 'column_id', 'nom',
         'description', 'priority', 'order', 'date_limite', 'completed_at'
+    ];
+
+    protected $casts = [
+        'date_limite' => 'datetime',
+        'completed_at' => 'datetime',
     ];
 
     protected static function boot()

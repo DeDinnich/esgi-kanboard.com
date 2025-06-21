@@ -15,14 +15,14 @@
     </div>
     <div class="d-flex align-items-center gap-3 position-relative">
         {{-- Cloche --}}
-        <div class="position-relative dropdown">
+        {{-- <div class="position-relative dropdown">
             <i class="fas fa-bell fa-lg cursor-pointer dropdown-toggle" role="button" data-bs-toggle="dropdown"></i>
             <ul class="dropdown-menu dropdown-menu-end shadow">
                 <li class="dropdown-header">Notifications</li>
                 <li><a class="dropdown-item" href="#">Projet X : Machin a supprimé la carte "..." à 12h34</a></li>
                 <li><a class="dropdown-item" href="#">Projet Y : Vous avez été ajouté à "Sprint Q3"</a></li>
             </ul>
-        </div>
+        </div> --}}
 
         {{-- Avatar avec menu --}}
         <div class="dropdown">

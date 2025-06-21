@@ -3,7 +3,7 @@
 @section('title', 'Connexion')
 
 @section('content')
-<div class="container my-5" style="max-width: 500px;">
+<div class="container my-5" style="max-width: 500px; min-height: 82vh;">
     <h1 class="mb-4">Connexion</h1>
     <form class="mb-3" method="POST" action="{{ route('login') }}">
         @csrf

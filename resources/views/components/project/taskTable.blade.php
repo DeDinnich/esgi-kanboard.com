@@ -34,7 +34,7 @@
                             @endforeach
                         </div>
                     </td>
-                    <td>{{ optional($task->deadline)->format('d/m/Y') ?? 'Non définie' }}</td>
+                    <td>{{ optional($task->date_limite)->format('d/m/Y') ?? 'Non définie' }}</td>
                     <td>
                         <div class="d-flex gap-2">
                             <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editTaskModal-{{ $task->id }}">

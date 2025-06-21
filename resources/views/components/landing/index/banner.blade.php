@@ -1,10 +1,9 @@
-<section id="accueil" class="py-5 bg-white">
+<section id="accueil" class="py-5 mt-5 bg-white">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-md-6 text-center text-md-start mb-4 mb-md-0">
-                <h1 class="fw-bold mb-3">
-                    KANBOARD :<br>
-                    <span class="text-primary">Organisez, collaborez, réussissez !</span>
+            <div class="col-md-7 text-center text-md-start mb-4 mb-md-0">
+                <h1 class="fw-bold mb-3 text-center text-md-start">
+                    KANBOARD : Organisez, collaborez, réussissez !<br>
                 </h1>
                 <h2 class="fs-4 mb-4">
                     Créez des projets, organisez vos tâches et travaillez en équipe en toute simplicité.
@@ -14,10 +13,9 @@
                 </a>
             </div>
 
-            <div class="col-md-6 text-center">
-                <div class="banner-media position-relative">
-                    <img src="{{ asset('images/preview.jpg') }}" alt="Aperçu Kanboard" class="img-fluid rounded shadow preview-img">
-                    <video class="preview-video position-absolute top-0 start-0 w-100 h-100 rounded shadow" muted loop preload="none" style="display: none;">
+            <div class="col-md-5 text-center">
+                <div class="banner-media position-relative rounded overflow-hidden shadow">
+                    <video class="preview-video w-100 h-auto rounded" muted loop preload="metadata">
                         <source src="{{ asset('videos/preview.mp4') }}" type="video/mp4">
                         Votre navigateur ne supporte pas la vidéo.
                     </video>

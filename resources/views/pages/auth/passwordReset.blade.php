@@ -3,7 +3,7 @@
 @section('title', 'Définir un nouveau mot de passe')
 
 @section('content')
-<div class="container my-5" style="max-width: 500px;">
+<div class="container my-5" style="max-width: 500px; min-height: 82vh;">
     <h1 class="mb-4">Nouveau mot de passe</h1>
     <form method="POST" action="{{ route('password.update') }}">
         @csrf

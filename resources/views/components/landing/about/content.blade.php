@@ -1,6 +1,6 @@
 <div class="row align-items-center my-5">
     <div class="col-md-5">
-        <img src="{{ asset('images/about-us.jpg') }}" alt="Équipe de Kanboard en action" class="img-fluid rounded shadow">
+        <img src="{{ asset('images/temp.png') }}" alt="Équipe de Kanboard en action" class="img-fluid rounded shadow">
     </div>
     <div class="col-md-7">
         <h2 class="mb-4 fw-bold">Qui sommes-nous&nbsp;?</h2>
@@ -28,7 +28,7 @@
 
 <div class="row align-items-center my-5">
     <div class="col-md-5 order-md-2">
-        <img src="{{ asset('images/mission.jpg') }}" alt="Objectifs de Kanboard" class="img-fluid rounded shadow">
+        <img src="{{ asset('images/temp.png') }}" alt="Objectifs de Kanboard" class="img-fluid rounded shadow">
     </div>
     <div class="col-md-7 order-md-1">
         <h2 class="mb-4 fw-bold">Notre mission</h2>
@@ -54,7 +54,7 @@
 
 <div class="row align-items-center my-5">
     <div class="col-md-5">
-        <img src="{{ asset('images/team.jpg') }}" alt="L'équipe Kanboard" class="img-fluid rounded shadow">
+        <img src="{{ asset('images/temp.png') }}" alt="L'équipe Kanboard" class="img-fluid rounded shadow">
     </div>
     <div class="col-md-7">
         <h2 class="mb-4 fw-bold">Notre équipe</h2>

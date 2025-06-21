@@ -3,7 +3,7 @@
 @section('title', 'Mot de passe oublié')
 
 @section('content')
-<div class="container my-5" style="max-width: 500px;">
+<div class="container my-5" style="max-width: 500px; min-height: 82vh;">
     <h1 class="mb-4">Réinitialiser le mot de passe</h1>
     <form method="POST" action="{{ route('password.email') }}">
         @csrf

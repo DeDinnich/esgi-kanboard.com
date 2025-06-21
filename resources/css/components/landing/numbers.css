@@ -1,0 +1,15 @@
+#nombres-cles {
+    background-color: #D7E0E9;
+}
+
+#nombres-cles .fas,
+#nombres-cles .counter,
+#nombres-cles p {
+    color: #000;
+}
+
+#nombres-cles .counter {
+    font-size: 2.5rem;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+}

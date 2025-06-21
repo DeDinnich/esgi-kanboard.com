@@ -28,7 +28,10 @@
             </div>
 
             <div class="text-center">
-                <button type="submit" class="btn btn-primary btn-lg">Envoyer</button>
+                <button type="submit" class="btn btn-primary btn-lg d-inline-flex align-items-center justify-content-center" id="contact-submit-btn">
+                    <span class="spinner-border spinner-border-sm me-2 d-none" id="contact-spinner" role="status" aria-hidden="true"></span>
+                    <span>Envoyer</span>
+                </button>
             </div>
         </form>
     </div>

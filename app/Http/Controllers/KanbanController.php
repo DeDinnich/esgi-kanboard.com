@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\Column;
 use App\Models\Task;
+use Illuminate\Support\Facades\Log;
 
 
 class KanbanController extends Controller
@@ -56,22 +57,62 @@ class KanbanController extends Controller
 
     public function createTask(Request $request, Column $column)
     {
-        $request->validate([
-            'nom'         => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'order'       => 'required|integer|min:1',
-            'priority'    => 'nullable|string|in:basse,moyenne,élevée',
+        Log::info('Requête reçue pour créer une tâche', [
+            'request_data' => $request->all(),
+            'column_id' => $column->id,
         ]);
 
-        $task = $column->tasks()->create([
-            'user_id'     => auth()->id(),
-            'nom'         => $request->nom,
-            'description' => $request->description,
-            'order'       => $request->order,
-            'priority'    => $request->priority,
-        ]);
+        try {
+            $request->validate([
+                'nom'            => 'required|string|max:255',
+                'description'    => 'nullable|string',
+                'order'          => 'required|integer|min:1',
+                'priority'       => 'nullable|string|in:basse,moyenne,élevée',
+                'date_limite'    => 'nullable|date',
+                'collaborateurs' => 'nullable|array',
+                'collaborateurs.*' => 'exists:users,id',
+            ]);
 
-        return back()->with('success', 'Tâche créée avec succès.');
+            Log::info('Validation des données réussie', [
+                'validated_data' => $request->only([
+                    'nom', 'description', 'order', 'priority', 'date_limite', 'collaborateurs'
+                ]),
+            ]);
+
+            $task = $column->tasks()->create([
+                'user_id'     => auth()->id(),
+                'nom'         => $request->nom,
+                'description' => $request->description,
+                'order'       => $request->order,
+                'priority'    => $request->priority,
+                'date_limite' => $request->date_limite,
+            ]);
+
+            Log::info('Tâche créée avec succès', [
+                'task_id' => $task->id,
+                'task_data' => $task->toArray(),
+            ]);
+
+            // Attacher les collaborateurs si fournis
+            if ($request->filled('collaborateurs')) {
+                $task->collaborateurs()->sync($request->collaborateurs);
+                Log::info('Collaborateurs attachés à la tâche', [
+                    'task_id' => $task->id,
+                    'collaborateurs' => $request->collaborateurs,
+                ]);
+            }
+
+            return back()->with('success', 'Tâche créée avec succès.');
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de la création de la tâche', [
+                'error_message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'request_data' => $request->all(),
+                'column_id' => $column->id,
+            ]);
+
+            return back()->withErrors('Une erreur est survenue lors de la création de la tâche.');
+        }
     }
 
     public function storeColumn(Request $request)
@@ -121,7 +162,7 @@ class KanbanController extends Controller
             'nom' => 'required|string|max:255',
             'description' => 'nullable|string',
             'order' => 'required|integer|min:1',
-            'deadline' => 'nullable|date',
+            'date_limite' => 'nullable|date',
             'collaborateurs' => 'nullable|array',
             'collaborateurs.*' => 'exists:users,id',
         ]);
@@ -130,7 +171,7 @@ class KanbanController extends Controller
             'nom' => $request->nom,
             'description' => $request->description,
             'order' => $request->order,
-            'deadline' => $request->deadline,
+            'date_limite' => $request->date_limite,
         ]);
 
         $task->collaborateurs()->sync($request->collaborateurs ?? []);

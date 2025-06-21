@@ -1,4 +1,4 @@
-<header class="d-flex justify-content-between align-items-center px-4 py-3 border-bottom bg-white">
+<header class="d-flex justify-content-between align-items-center px-4 py-3 border-bottom bg-light fixed-top-custom">
     <div class="fw-bold fs-4 text-uppercase">
         KANBOARD
     </div>
@@ -10,7 +10,7 @@
                     Accueil
                 </a>
                 <ul class="dropdown-menu position-absolute">
-                    <li><a class="dropdown-item" href="/#accueil">Accueil</a></li>
+                    <li><a class="dropdown-item" href="/#">Accueil</a></li>
                     <li><a class="dropdown-item" href="/#solution">La solution Kanboard</a></li>
                     <li><a class="dropdown-item" href="/#contact">Prendre contact</a></li>
                 </ul>
@@ -25,7 +25,7 @@
     </nav>
 
     <div class="d-flex gap-3">
-        <a href="{{ route('register') }}" class="btn btn-outline-primary">S'inscrire</a>
+        <a href="{{ route('register') }}" class="btn btn-primary">S'inscrire</a>
         <a href="{{ route('login') }}" class="btn btn-primary">Se connecter</a>
     </div>
 </header>

@@ -31,7 +31,7 @@
 
                 <div class="mb-3">
                     <label class="form-label">Date limite</label>
-                    <input type="date" class="form-control" name="deadline" value="{{ old('deadline', optional($task->deadline)->format('Y-m-d')) }}">
+                    <input type="date" class="form-control" name="date_limite" value="{{ old('date_limite', optional($task->date_limite)->format('Y-m-d')) }}">
                 </div>
 
                 <div class="mb-3">

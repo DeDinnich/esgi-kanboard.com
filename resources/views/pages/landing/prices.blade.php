@@ -6,8 +6,8 @@
 @section('author', 'Kanboard Team')
 
 @section('content')
-<section class="min-vh-100 d-flex flex-column">
-    <div class="container my-5 flex-grow-1">
+<section class="d-flex flex-column mt-5">
+    <div class="container my-5 flex-grow-1" style="min-height: 82vh;">
         <h1 class="text-center mb-5">Des forfaits adaptés à vos besoins,<br>pour tous les projets et toutes les équipes</h1>
 
         @include('components.landing.prices.cards')

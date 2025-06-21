@@ -8,3 +8,23 @@
     object-fit: cover;
     cursor: pointer;
 }
+
+/* Centrage global */
+#accueil h1 {
+    text-align: center;
+}
+
+/* Tagline : ligne unique, noir, plus fin et plus petit */
+#accueil .tagline {
+    font-weight: 400;          /* plus fin que fw-bold */
+    font-size: 1.25rem;        /* plus petit */
+    color: #000;               /* noir */
+    white-space: nowrap;      /* reste sur une seule ligne */
+}
+
+/* Responsive : garder aligné à gauche sur md+ */
+@media (min-width: 768px) {
+    #accueil h1 {
+        text-align: left;
+    }
+}

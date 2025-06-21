@@ -9,7 +9,8 @@ import initAOS         from './modules/aos';
 import monitorReverb   from './modules/reverbStatus';
 
 import initDropdownHover from './components/dropdownHover.js';
-import initBannerHoverVideo from './components/bannerHoverVideo.js';
+import initContactForm from './components/initContactForm.js';
+import initBannerAutoplay from './components/initBannerAutoplay.js';
 import initKeyNumberCounters from './components/counter.js';
 import initStripePayment from './components/stripe.js';
 import initSidebarToggle from './components/sidebarToggle';
@@ -29,7 +30,8 @@ if (['/', '/about', '/prices'].includes(window.location.pathname)) {
 
 if (['/'].includes(window.location.pathname)) {
     document.addEventListener('DOMContentLoaded', () => {
-        initBannerHoverVideo();
+        initContactForm();
+        initBannerAutoplay();
         initKeyNumberCounters();
     });
 }
