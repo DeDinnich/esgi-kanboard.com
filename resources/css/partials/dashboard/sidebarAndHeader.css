@@ -109,6 +109,5 @@
 }
 
 #dashboard-aside a:hover {
-    color: var(--kanboard-gold); /* ou directement #C7B09A */
     text-decoration: underline;
 }

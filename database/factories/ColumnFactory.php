@@ -23,7 +23,6 @@ class ColumnFactory extends Factory
             'user_id' => User::factory(),
             'project_id' => Project::factory(),
             'nom' => $this->faker->word(),
-            'order' => $this->faker->numberBetween(1, 10),
         ];
     }
 }

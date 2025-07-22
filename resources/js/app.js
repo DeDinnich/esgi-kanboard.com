@@ -4,9 +4,9 @@ import '../css/app.css';
 import 'bootstrap';
 import 'aos/dist/aos.css';
 
-import initEcho        from './modules/echo';
+// import initEcho        from './modules/echo';
 import initAOS         from './modules/aos';
-import monitorReverb   from './modules/reverbStatus';
+// import monitorReverb   from './modules/reverbStatus';
 
 import initDropdownHover from './components/dropdownHover.js';
 import initContactForm from './components/initContactForm.js';
@@ -18,9 +18,9 @@ import { renderBarChart, renderPieChart } from './components/adminCharts.js';
 import initCalendarView from './components/calendarView';
 
 
-initEcho();      // initialise Echo
+// initEcho();      // initialise Echo
 initAOS();       // initialise AOS
-monitorReverb(); // monitoring sans réinitialiser Echo
+// monitorReverb(); // monitoring sans réinitialiser Echo
 
 if (['/', '/about', '/prices'].includes(window.location.pathname)) {
     document.addEventListener('DOMContentLoaded', () => {

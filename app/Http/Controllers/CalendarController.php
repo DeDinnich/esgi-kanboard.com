@@ -74,28 +74,41 @@ class CalendarController extends Controller
 
     public function generateIcal(Project $project)
     {
-        $tasks = Task::whereHas('column', fn ($q) => $q->where('project_id', $project->id))->get();
+        try {
+            Log::info('Generating iCal for project.', ['project_id' => $project->id]);
 
-        $calendar = new ICalendar();
+            $tasks = Task::whereHas('column', fn ($q) => $q->where('project_id', $project->id))->get();
 
-        foreach ($tasks as $task) {
-            if (!$task->date_limite) continue;
+            $calendar = new ICalendar();
 
-            $event = new Event();
-            $event->setSummary($task->titre);
-            $event->setDescription($task->description ?? '');
-            $event->setOccurrence(new \Eluceo\iCal\Domain\ValueObject\SingleDay(
-                new \Eluceo\iCal\Domain\ValueObject\Date(new \DateTime($task->date_limite))
-            ));
-            $calendar->addEvent($event);
+            foreach ($tasks as $task) {
+                if (!$task->date_limite) continue;
+
+                $event = new Event();
+                $event->setSummary($task->nom ?? 'Tâche sans nom');
+                $event->setDescription($task->description ?? '');
+                $event->setOccurrence(new \Eluceo\iCal\Domain\ValueObject\SingleDay(
+                    new \Eluceo\iCal\Domain\ValueObject\Date(new \DateTime($task->date_limite))
+                ));
+                $calendar->addEvent($event);
+            }
+
+            $componentFactory = new CalendarFactory();
+            $calendarComponent = $componentFactory->createCalendar($calendar);
+
+            Log::info('iCal generated successfully.', ['project_id' => $project->id]);
+
+            return Response::make($calendarComponent, 200, [
+                'Content-Type' => 'text/calendar',
+                'Content-Disposition' => 'attachment; filename=kanboard-'.$project->id.'.ics',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error generating iCal: ' . $e->getMessage(), [
+                'project_id' => $project->id,
+                'exception' => $e,
+            ]);
+
+            return response()->json(['error' => 'An error occurred while generating the iCal file.'], 500);
         }
-
-        $componentFactory = new CalendarFactory();
-        $calendarComponent = $componentFactory->createCalendar($calendar);
-
-        return Response::make($calendarComponent, 200, [
-            'Content-Type' => 'text/calendar',
-            'Content-Disposition' => 'attachment; filename=kanboard-'.$project->id.'.ics',
-        ]);
     }
 }

@@ -1,7 +1,4 @@
 /* Couleurs */
-:root {
-    --kanboard-gold: #C7B09A;
-}
 
 .fixed-top-custom {
     position: fixed;
@@ -12,35 +9,6 @@
     background-color: #f8f9fa; /* équivalent Bootstrap .bg-light */
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
-
-/* Boutons */
-.btn-primary,
-.btn-outline-primary {
-    border-radius: 0.375rem;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-/* Couleur personnalisée */
-.btn-primary {
-    background-color: var(--kanboard-gold);
-    border-color: var(--kanboard-gold);
-    color: #fff;
-}
-
-.btn-outline-primary {
-    color: var(--kanboard-gold);
-    border-color: var(--kanboard-gold);
-}
-
-.btn-primary:hover,
-.btn-outline-primary:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0.5rem 1rem rgba(199, 176, 154, 0.3);
-    background-color: var(--kanboard-gold);
-    color: #fff;
-    border: 1px solid var(--kanboard-gold);
-}
-
 /* Liens */
 header .nav-link {
     font-weight: 600;
@@ -62,11 +30,6 @@ header .nav-link::after {
 
 header .nav-link:hover::after {
     width: 100%;
-}
-
-header .nav-link:hover,
-header .dropdown-menu .dropdown-item:hover {
-    color: var(--kanboard-gold);
 }
 
 header .dropdown-toggle::after {

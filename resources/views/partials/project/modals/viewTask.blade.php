@@ -8,7 +8,8 @@
             </div>
             <div class="modal-body">
                 <p><strong>Nom :</strong> {{ $task->nom }}</p>
-                <p><strong>Description :</strong> {{ $task->description ?? 'Aucune' }}</p>
+                <p><strong>Description :</strong></p>
+                <p style="word-wrap: break-word; white-space: pre-wrap;">{{ $task->description ?? 'Aucune' }}</p>
 
                 <p><strong>Collaborateurs :</strong></p>
                 <ul>

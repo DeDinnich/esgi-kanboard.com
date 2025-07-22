@@ -3,8 +3,8 @@
 @section('title', $project->nom)
 
 @section('content')
-    <div class="container py-4">
-        <h2 class="mb-4">Vue Kanban du projet : {{ $project->nom }}</h2>
+    <div class="py-4">
+        <h2 class="mb-4 ms-5">Vue Kanban du projet : {{ $project->nom }}</h2>
 
         @include('components.alerts')
         @include('components.project.kanbanBoard', ['columns' => $project->columns])

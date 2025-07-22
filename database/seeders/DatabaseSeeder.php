@@ -73,7 +73,7 @@ class DatabaseSeeder extends Seeder
 
         // Création de projets
         $users->each(function ($user) use ($users) {
-            $nbProjects = rand(0, 10);
+            $nbProjects = rand(0, 4);
             Project::factory($nbProjects)->create([
                 'user_id' => $user->id,
             ])->each(function ($project) use ($users) {
@@ -93,26 +93,34 @@ class DatabaseSeeder extends Seeder
                 }
 
                 // Colonnes
-                Column::factory(rand(2, 20))->create([
-                    'project_id' => $project->id,
-                    'user_id' => $project->user_id,
-                ])->each(function ($column) use ($users, $project) {
-                    // Tâches
-                    Task::factory(rand(0, 20))->create([
-                        'column_id' => $column->id,
-                        'user_id' => $column->user_id,
-                    ])->each(function ($task) use ($users, $project) {
+                $nbColumns = rand(4, 7);
+                for ($i = 0; $i < $nbColumns; $i++) {
+                    $column = Column::factory()->create([
+                        'project_id' => $project->id,
+                        'user_id' => $project->user_id,
+                        'order' => $i + 1, // ordre de 1 à n
+                    ]);
+
+                    // Tâches avec ordre croissant
+                    $nbTasks = rand(0, 12);
+                    for ($j = 0; $j < $nbTasks; $j++) {
+                        $task = Task::factory()->create([
+                            'column_id' => $column->id,
+                            'user_id' => $column->user_id,
+                            'order' => $j + 1,
+                        ]);
+
                         // Collaborateurs des tâches (hors créateur)
                         $collabs = $users->where('id', '!=', $task->user_id)
-                                         ->random(rand(1, 5));
+                                        ->random(rand(1, 5));
                         foreach ($collabs as $user) {
                             TaskCollaborateur::factory()->create([
                                 'task_id' => $task->id,
                                 'user_id' => $user->id,
                             ]);
                         }
-                    });
-                });
+                    }
+                }
             });
         });
     }

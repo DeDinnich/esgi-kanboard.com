@@ -18,6 +18,8 @@ class TaskFactory extends Factory
      */
     public function definition(): array
     {
+        $dateLimite = $this->faker->optional(0.8)->dateTimeBetween('+2 days', '+40 days');
+
         return [
             'id' => $this->faker->uuid(),
             'user_id' => User::factory(),
@@ -25,8 +27,8 @@ class TaskFactory extends Factory
             'nom' => $this->faker->sentence(3),
             'description' => $this->faker->paragraph(),
             'priority' => $this->faker->randomElement(['basse', 'moyenne', 'élevée']),
-            'order' => $this->faker->numberBetween(1, 20),
-            'date_limite' => $this->faker->optional()->date(),
+            'order' => null, // assigné dans le seeder
+            'date_limite' => $dateLimite ? $dateLimite->format('Y-m-d') : null,
             'completed_at' => $this->faker->boolean(50) ? now() : null,
         ];
     }

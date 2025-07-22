@@ -167,16 +167,47 @@ class KanbanController extends Controller
             'collaborateurs.*' => 'exists:users,id',
         ]);
 
+        $oldOrder = $task->order;
+        $newOrder = $request->order;
+        $columnId = $task->column_id;
+
+        if ($newOrder !== $oldOrder) {
+            // 🔁 Réordonner les autres tâches de la même colonne
+            $tasks = Task::where('column_id', $columnId)
+                ->where('id', '!=', $task->id)
+                ->orderBy('order')
+                ->get();
+
+            $updated = collect();
+
+            $position = 1;
+            foreach ($tasks as $t) {
+                if ($position == $newOrder) {
+                    $position++; // on réserve la place pour la tâche actuelle
+                }
+                $updated->push([
+                    'id' => $t->id,
+                    'order' => $position++,
+                ]);
+            }
+
+            // Mise à jour en base (en batch)
+            foreach ($updated as $item) {
+                Task::where('id', $item['id'])->update(['order' => $item['order']]);
+            }
+        }
+
+        // Mettre à jour la tâche elle-même
         $task->update([
             'nom' => $request->nom,
             'description' => $request->description,
-            'order' => $request->order,
+            'order' => $newOrder,
             'date_limite' => $request->date_limite,
         ]);
 
         $task->collaborateurs()->sync($request->collaborateurs ?? []);
 
-        return back()->with('success', 'Tâche mise à jour.');
+        return back()->with('success', 'Tâche mise à jour avec succès.');
     }
 }
 
